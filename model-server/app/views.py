@@ -1,6 +1,4 @@
-from app import (app, request, jsonify, BASE_DIR, MODEL_PATH, middleware, 
-                 image_processing, model, class_names, ALLOWED_EXTENSIONS, 
-                 secure_filename, logger)
+from app import (app, request, jsonify, middleware, image_processing, model, class_names, logger)
 import numpy as np
 from PIL import Image
 import time
