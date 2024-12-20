@@ -26,7 +26,6 @@ def file_validation_middleware(func):
         file = request.files['file']
         logger.info(f"Received file: {file.filename}")
 
-        # Check file type
         if not allowed_file(file.filename):
             logger.warning(f"Invalid file type: {file.filename}")
             return jsonify({'error': 'Invalid file type'}), 400
