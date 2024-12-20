@@ -4,7 +4,6 @@ import os
 from werkzeug.utils import secure_filename
 import logging
 
-import tensorflow as tf
 import tensorflow_hub as hub
 import tf_keras
 
