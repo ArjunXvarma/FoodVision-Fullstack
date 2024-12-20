@@ -1,4 +1,6 @@
 model-server/venv-metal
 model-server/app/__pycache__
+model-server/.env
+
 api-server/node_modules
 frontend/food-vision/node_modules
