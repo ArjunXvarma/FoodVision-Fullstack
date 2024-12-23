@@ -10,7 +10,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ previewUrl }) => {
             src={previewUrl}
             alt="Preview"
             className="img-fluid rounded shadow-lg"
-            style={{ maxHeight: "100%", maxWidth: "100%" }}
+            style={{ maxHeight: "90%", maxWidth: "90%" }}
         />
     ) : (
         <div

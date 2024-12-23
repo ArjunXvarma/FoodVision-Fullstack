@@ -6,7 +6,7 @@ interface PredictButtonProps {
 
 const PredictButton: React.FC<PredictButtonProps> = ({ onPredict }) => {
     return (
-        <button className="btn btn-primary btn-lg mb-4 w-75" onClick={onPredict}>
+        <button className="btn btn-primary btn-lg mb-4" onClick={onPredict}>
             Predict
         </button>
     )

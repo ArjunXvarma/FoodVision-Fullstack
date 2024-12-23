@@ -30,8 +30,7 @@ app.post('/predict', upload.single('file'), async (req, res) => {
         }
         const response = await axios.post('http://127.0.0.1:5000/predict', formData, { headers })
         res.json({
-            ...response.data,
-            response_time: response.headers['x-response-time'] 
+            ...response.data
         })
     } catch (error) {
         console.error('Error:', error)
