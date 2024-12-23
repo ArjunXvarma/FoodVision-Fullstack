@@ -100,7 +100,7 @@ const App: React.FC = () => {
           <ImageViewer previewUrl={previewUrl} />
         </div>
         {/* Right Side: Top and Bottom Sections */}
-        <div className="col-md-6 d-flex flex-column">
+        <div className="col-md-6 d-flex flex-column justify-content-center align-items-center">
           <TopSection />
           <BottomSection
             handleFileChange={handleFileChange}
