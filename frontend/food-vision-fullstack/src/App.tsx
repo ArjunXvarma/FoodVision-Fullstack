@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ImageViewer from "./components/ImageViewer";
-import BottomSection from "./components/BottomSection"
-import TopSection from "./components/TopSection"
+import BottomSection from "./components/BottomSection";
+import TopSection from "./components/TopSection";
 
 interface Prediction {
   class: string;
@@ -31,6 +31,13 @@ const App: React.FC = () => {
   const [responseTime, setResponseTime] = useState<number>(0);
   const [loading, setLoading] = useState(false);
 
+  const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
+  const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+  console.log(API_KEY);
+  console.log(API_URL);
+  
+  
+
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
@@ -45,6 +52,11 @@ const App: React.FC = () => {
       return;
     }
 
+    if (!API_KEY) {
+      alert("API key is missing! Please set REACT_APP_API_KEY in the .env file.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", selectedFile);
 
@@ -52,8 +64,11 @@ const App: React.FC = () => {
     const startTime = performance.now();
 
     try {
-      const response = await fetch("http://localhost:3000/predict", {
+      const response = await fetch(`${API_URL}/predict`, {
         method: "POST",
+        headers: {
+          "x-api-key": API_KEY,
+        },
         body: formData,
       });
       const endTime = performance.now();

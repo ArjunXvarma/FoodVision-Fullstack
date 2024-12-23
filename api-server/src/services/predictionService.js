@@ -1,6 +1,7 @@
 const axios = require('axios')
 const FormData = require('form-data')
 const { Readable } = require('stream')
+const { API_KEY } = require('../config/env')
 
 const handlePrediction = async (req, res) => {
     try {
@@ -12,6 +13,7 @@ const handlePrediction = async (req, res) => {
         formData.append('file', fileStream, 'image.jpg')
 
         const headers = {
+            'x-api-key': API_KEY,
             ...formData.getHeaders(),
         }
 
