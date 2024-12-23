@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    environment:
+      - VITE_REACT_APP_API_KEY=7c04367ebe0308ff61899aac6e8052fc0da0afd4cbc110e899a8102ac3662a22
+      - VITE_REACT_APP_API_URL=http://localhost:5000
+
+  backend:
+    build:
+      context: ./api-server
+    ports:
+      - "5000:5000"
+    environment:
+      - API_KEY=7c04367ebe0308ff61899aac6e8052fc0da0afd4cbc110e899a8102ac3662a22
+      - PORT=5000
+    depends_on:
+      - model-server
+    networks:
+      - app-network
+
+  model-server:
+    build:
+      context: ./model-server
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+    environment:
+      - VALID_API_KEYS=7c04367ebe0308ff61899aac6e8052fc0da0afd4cbc110e899a8102ac3662a22,e92c856a5a23fc6a9b3d3c6c089971e143eec0522da99f794e15aa3f2ff11d72,14ca78b371926b45fd759977f2328a2def211f72c1022cac81f92a0e71e6480e
+      - PORT=8000
+
+networks:
+  app-network:
+    driver: bridge
