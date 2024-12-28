@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "start": "nodemon server.js"
+    "start": "NODE_ENV=production node server.js"
   },
   "author": "Arjun Varma",
   "license": "ISC",
@@ -16,7 +16,9 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "form-data": "^4.0.1",
+    "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "winston": "^3.17.0"
   }
 }
