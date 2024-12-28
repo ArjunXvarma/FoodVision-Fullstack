@@ -5,4 +5,4 @@ model-server/.env
 api-server/node_modules
 api-server/.env
 
-frontend/food-vision/node_modules
+frontend/node_modules

@@ -33,8 +33,6 @@ const App: React.FC = () => {
 
     const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY
     const API_URL = import.meta.env.VITE_REACT_APP_API_URL
-    console.log(API_KEY)
-    console.log(API_URL)
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null
@@ -62,33 +60,33 @@ const App: React.FC = () => {
         const startTime = performance.now()
 
         try {
-        const response = await fetch(`${API_URL}/predict`, {
-            method: "POST",
-            headers: {
-            "x-api-key": API_KEY,
-            },
-            body: formData,
-        })
-        const endTime = performance.now()
-        const data = await response.json()
-
-        if (response.ok) {
-            setMainPrediction({
-            class: classNameMapping[data.class] || data.class,
-            confidence: data.confidence,
+            const response = await fetch(`${API_URL}/predict`, {
+                method: "POST",
+                headers: {
+                "x-api-key": API_KEY,
+                },
+                body: formData,
             })
-            setOtherPredictions(
-            (data.other_possible_classes || []).map((prediction: Prediction) => ({
-                class: classNameMapping[prediction.class] || prediction.class,
-                confidence: prediction.confidence,
-            }))
-            )
-            setInferenceTime(data.inference_time || 0)
-            setResponseTime((endTime - startTime) / 1000)
-        } else {
-            alert(data.error || "An error occurred while predicting.")
-            resetState()
-        }
+            const endTime = performance.now()
+            const data = await response.json()
+
+            if (response.ok) {
+                setMainPrediction({
+                    class: classNameMapping[data.class] || data.class,
+                    confidence: data.confidence,
+                })
+                setOtherPredictions(
+                    (data.other_possible_classes || []).map((prediction: Prediction) => ({
+                        class: classNameMapping[prediction.class] || prediction.class,
+                        confidence: prediction.confidence,
+                    }))
+                )
+                setInferenceTime(data.inference_time || 0)
+                setResponseTime((endTime - startTime) / 1000)
+            } else {
+                alert(data.error || "An error occurred while predicting.")
+                resetState()
+            }
         } catch (error) {
             alert("An error occurred while connecting to the server.")
             console.error(error)
