@@ -2,8 +2,8 @@ name: Keep Services Alive
 
 on:
   schedule:
-    # Runs every 5 secs
-    - cron: '*/5 * * * * *'
+    # Runs every 5 minute
+    - cron: '*/1 * * * * '
   workflow_dispatch: # Allow manual triggers as well
 
 jobs:
