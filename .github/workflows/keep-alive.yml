@@ -1,0 +1,30 @@
+name: Keep Services Alive
+
+on:
+  schedule:
+    # Runs every 5 secs
+    - cron: '*/5 * * * * *'
+  workflow_dispatch: # Allow manual triggers as well
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Adjust to your Node.js version
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run the cron job script
+      - name: Run Keep Alive Script
+        run: node cron-job/index.js

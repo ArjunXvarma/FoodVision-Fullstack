@@ -1,4 +1,3 @@
-const cron = require('node-cron')
 const axios = require('axios')
 
 const services = [
@@ -19,10 +18,8 @@ const keepAlive = async () => {
     }
 }
 
-// Cron schedule for every 5 minutes
-cron.schedule('*/5 * * * *', () => {
+(async () => {
     console.log('Running keep-alive job...')
-    keepAlive()
-})
-  
-console.log('Cron job scheduled to keep services alive.')
+    await keepAlive()
+    console.log('Keep-alive job completed.')
+})()
