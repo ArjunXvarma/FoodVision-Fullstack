@@ -2,8 +2,8 @@ name: Keep Services Alive
 
 on:
   schedule:
-    # Runs every 5 minute
-    - cron: '*/1 * * * * '
+    # Runs every 1 minute
+    - cron: '*/1 * * * *'
   workflow_dispatch: # Allow manual triggers as well
 
 jobs:
@@ -19,12 +19,15 @@ jobs:
       with:
         node-version: '18'
 
-    # Navigate to the directory containing package.json
+    # Navigate to the correct directory if needed
     - name: Navigate to script directory
-      run: cd cron-job
+      working-directory: cron-job  # Ensure this is correct
+      run: pwd
 
     - name: Install dependencies
       run: npm install
+      working-directory: cron-job  # Ensure this is correct
 
     - name: Run Keep Alive Script
       run: node index.js
+      working-directory: cron-job  # Ensure this is correct
