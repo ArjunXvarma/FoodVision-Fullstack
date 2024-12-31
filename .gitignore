@@ -6,3 +6,7 @@ api-server/node_modules
 api-server/.env
 
 frontend/node_modules
+
+tests/.venv
+tests/__pycache__
+tests/.env
