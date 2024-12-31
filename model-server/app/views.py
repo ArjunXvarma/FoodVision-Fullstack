@@ -20,7 +20,6 @@ def predict():
         input_image = image_processing.preprocess_image(image)  # Confirm `image_processing` is callable
         logger.info("Image preprocessing complete")
 
-        # Prepare the payload for TensorFlow Serving
         payload = {
             "instances": input_image.tolist()
         }
@@ -36,18 +35,15 @@ def predict():
             logger.error(f"TensorFlow Serving error: {response.text}")
             return jsonify({'error': 'Error during inference'}), 500
 
-        # Parse predictions
         predictions = response.json()['predictions'][0]
         predicted_index = np.argmax(predictions)
         predicted_class = class_names[predicted_index]
         confidence = float(predictions[predicted_index])
         logger.info("Parsed predictions successfully")
 
-        # Calculate response time
         end_time = time.time()
         response_time = end_time - start_time
 
-        # Get top-3 predictions
         top_classes = [
             {"class": class_names[i], "confidence": float(predictions[i])}
             for i in np.argsort(predictions)[::-1]

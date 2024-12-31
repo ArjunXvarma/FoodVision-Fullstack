@@ -6,9 +6,8 @@ class ImageUploadTasks(TaskSet):
 
     @task
     def upload_image(self):
-        image_path = "test_image.jpg"  # Replace with your test image path
+        image_path = "test_image.jpg"  
 
-        # Check if the file exists
         if not os.path.exists(image_path):
             print(f"Error: Image file {image_path} not found.")
             return

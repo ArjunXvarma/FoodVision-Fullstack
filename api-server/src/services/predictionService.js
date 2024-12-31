@@ -2,7 +2,6 @@ const axios = require('axios')
 const FormData = require('form-data')
 const { Readable } = require('stream')
 const { API_KEY, MODEL_SERVER, NODE_ENV } = require('../config/env')
-// const logger = require('../config/logger')
 const { default: logger } = require('../config/logger')
 
 const handlePrediction = async (req, res) => {
