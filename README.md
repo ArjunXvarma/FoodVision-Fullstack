@@ -4,12 +4,13 @@
 ---
 
 ### **Overview**
-FoodVision is a full-stack food image classification application designed for scalability, clean code separation, and production efficiency. The project leverages a **Convolutional Neural Network (CNN)** built with TensorFlow to predict food categories from images. 
+FoodVision is a full-stack food image classification application designed for scalability, clean code separation, and production efficiency. The project leverages the pretrained EfficientNet80 model fine tuned to fit a dataset with 10,000 images resulting in a **Convolutional Neural Network (CNN)** built with TensorFlow to predict food categories from images. 
 
 To showcase industry-standard architecture, the application adopts a **microservices approach**:
-1. **Flask (Python)**: Serves the TensorFlow-trained model for image predictions.
-2. **Node.js/Express**: Manages API routing, user requests, and communication with the Flask model server.
-3. **(Optional) React.js Frontend**: Allows users to upload images, visualize predictions, and interact with the backend seamlessly.
+1. **Tensorflow serving:** Serves the TensorFlow-trained model for image predictions.
+2. **Flask (Python)**: Performs image processing on the input, preparing it for the tensorflow model.
+3. **Node.js/Express**: Manages API routing, user requests, and communication with the Flask model server.
+4. **(Optional) React.js Frontend**: Allows users to upload images, visualize predictions, and interact with the backend seamlessly.
 
 ---
 
@@ -17,7 +18,7 @@ To showcase industry-standard architecture, the application adopts a **microserv
 
 - **State-of-the-Art CNN Model**: A trained TensorFlow model for food classification using the **Food-101 dataset**.
 - **Microservices Architecture**: Separation of concerns using a Flask model server and a Node.js API server.
-- **Scalable & Efficient**: Designed to handle high volumes of requests and easily scale with additional servers or containers.
+- **Scalable & Efficient**: Designed to easily scale with additional servers or containers.
 - **Clean Code Separation**: Well-organized Python and Node.js codebases for easy maintenance and debugging.
 - **RESTful APIs**: Interaction between components happens through clean, standardized RESTful endpoints.
 - **Modern Tech Stack**:
@@ -32,8 +33,10 @@ To showcase industry-standard architecture, the application adopts a **microserv
 ```mermaid
 description FoodVision Project Architecture
 flowchart TD
-    User[User Uploads Image] -->|HTTP Request| Node[Node.js Backend]
-    Node -->|Forwards Image| Flask[Flask ML Server]
+    User[Frontend User] -->|HTTP Request| Node[Node.js Backend]
+    Node -->|Forwards Image & Request| Flask[Flask ML Server]
+    Flask -->|Processes Image| TFServing[TF Serving Docker Container]
+    TFServing -->|Returns Prediction| Flask
     Flask -->|Returns Prediction| Node
     Node -->|Sends Response| User
 ```
@@ -50,37 +53,57 @@ flowchart TD
 3. **React.js (Frontend)** *(Optional)*:  
    - Provides a user-friendly interface to upload images and view predictions.
 
+1. **Node.js/Express (Backend Server)**:
+  - Manages incoming HTTP requests from the frontend.
+  - Handles web-related tasks such as authentication and request routing.
+  - Acts as a bridge between the frontend and the model server (Flask).
+
+2. **Flask (Model Server)**:
+  - Prepares incoming images for processing.
+  - Communicates with the TF Serving Docker container for predictions.
+  - Returns processed predictions to the backend server.
+
+3. **TF Serving (Prediction Service)**:
+  - Hosts and serves the TensorFlow model for efficient predictions.
+  - Optimized for both CPU and GPU-bound tasks to handle model inference.
+
+4. **React.js (Frontend)**:
+  - Provides a user-friendly interface for uploading images.
+  - Displays the prediction results received from the backend server.
+
 ---
 
-### **Why This Architecture?** 💡
+## **Why This Architecture?** 💡
 
 1. **Scalability**:  
-   - The Flask server (model inference) and Node.js server (API routing) can be scaled **independently**.  
-   - For heavy prediction loads, multiple Flask servers can be deployed behind a load balancer.  
+   - The **Node.js backend**, **Flask server**, and **TF Serving Docker container** can be scaled **independently**.  
+   - For heavy prediction loads, multiple TF Serving containers and Flask servers can be deployed behind a load balancer.  
 
 2. **Clean Code Separation**:  
-   - Flask focuses on **ML inference**.  
-   - Node.js handles **non-ML operations** like routing, authentication, and rate limiting.  
+   - **Node.js backend** handles web-related tasks like routing, authentication, and rate limiting.  
+   - **Flask server** focuses on image preparation and communication with the TF Serving container.  
+   - **TF Serving** is optimized solely for model inference, ensuring modularity.  
 
 3. **Efficiency**:  
-   - Python is the best choice for serving ML models due to TensorFlow's optimization.  
-   - Node.js ensures fast, event-driven handling of user requests.  
+   - **TF Serving** is optimized for high-performance TensorFlow model inference on both CPU and GPU.  
+   - **Flask server** ensures efficient preprocessing and prediction response handling.  
+   - **Node.js** provides fast, event-driven handling of client requests, ensuring seamless user interaction.  
 
 4. **Microservices Design**:  
-   - Mirrors modern production-ready architectures used in industry.  
-   - Makes the system modular and easy to debug, maintain, or scale.
+   - Aligns with modern production-ready architectures widely used in industry.  
+   - Separates concerns into distinct services, making the system modular, easier to debug, maintain, and scale.
 
 ---
 
 ### **Tech Stack** 🛠️
 
-| **Component**      | **Technology**               |
-|--------------------|-----------------------------|
-| **Model Training** | TensorFlow, Keras, Python   |
-| **ML Server**      | Flask, TensorFlow Serving   |
-| **API Server**     | Node.js, Express.js         |
-| **Frontend**       | React.js                    |
-| **Deployment**     | AWS, Heroku, Docker         |
+| **Component**          | **Technology**               |
+|------------------------|------------------------------|
+| **Tensorflow serving** | TensorFlow, Keras, Python    |
+| **ML Server**          | Flask, TensorFlow Serving    |
+| **API Server**         | Node.js, Express.js          |
+| **Frontend**           | React.js                     |
+| **Deployment**         | AWS, Heroku, Docker          |
 
 ---
 
@@ -101,7 +124,7 @@ cd foodvision
    ```
 2. Install dependencies:
    ```bash
-   pip install tensorflow flask pillow
+   pip install -r requirements.txt
    ```
 3. Run the Flask server:
    ```bash
@@ -115,7 +138,7 @@ cd foodvision
    ```
 2. Install dependencies:
    ```bash
-   npm install express axios multer cors
+   npm install
    ```
 3. Run the Node.js server:
    ```bash
@@ -133,22 +156,21 @@ cd foodvision
    ```
 3. Run the frontend:
    ```bash
-   npm start
+    npm run build && npm run preview
    ```
 
 ---
 
 ### **API Endpoints** 🌐
 
-| **Endpoint**      | **Method** | **Description**                        |
-|-------------------|------------|----------------------------------------|
-| `/predict`        | POST       | Upload an image and get a prediction.  |
+| **Endpoint**      | **Method** | **Description**                        | **Header**
+|-------------------|------------|----------------------------------------|-------------------------
+| `/predict`        | POST       | Upload an image and get a prediction.  | `x-api-key`: include an api key
 
 ---
 
 ### **Future Improvements** 🚀
 - Add **user authentication** and **history tracking** for predictions.
-- Deploy Flask and Node.js servers using **Docker** for containerization.
 - Add **TensorFlow.js** support to allow in-browser model inference.
 
 ---
@@ -156,16 +178,6 @@ cd foodvision
 ### **Screenshots** 🟎️
 
 > Upload screenshots of the app here showing the UI, API response, and predictions.
-
----
-
-### **How to Contribute** 🤝
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-### **License** 📄
-This project is licensed under the MIT License.
 
 ---
 
