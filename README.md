@@ -39,7 +39,6 @@ flowchart TD
     TFServing -->|Returns Prediction| Flask
     Flask -->|Returns Prediction| Node
     Node -->|Sends Response| User
-```
 
 1. **Flask (Model Server)**:  
    - Handles model loading and inference using TensorFlow.  
