@@ -32,26 +32,14 @@ To showcase industry-standard architecture, the application adopts a **microserv
 
 ```mermaid
 description FoodVision Project Architecture
-flowchart TD
-    User[Frontend User] -->|HTTP Request| Node[Node.js Backend]
-    Node -->|Forwards Image & Request| Flask[Flask ML Server]
-    Flask -->|Processes Image| TFServing[TF Serving Docker Container]
-    TFServing -->|Returns Prediction| Flask
-    Flask -->|Returns Prediction| Node
-    Node -->|Sends Response| User
+flowchart TD;
+    User[Frontend User] -->|HTTP Request| Node[Node.js Backend];
+    Node -->|Forwards Image & Request| Flask[Flask ML Server];
+    Flask -->|Processes Image| TFServing[TF Serving Docker Container];
+    TFServing -->|Returns Prediction| Flask;
+    F lask -->|Returns Prediction| Node;
+    Node -->|Sends Response| User;
 ```
-
-1. **Flask (Model Server)**:  
-   - Handles model loading and inference using TensorFlow.  
-   - Optimized for CPU/GPU-bound tasks to serve predictions efficiently.  
-
-2. **Node.js/Express (API Server)**:  
-   - Manages incoming HTTP requests.  
-   - Acts as a bridge between the client (frontend) and the model server (Flask).  
-   - Scalable and lightweight to handle multiple concurrent users.  
-
-3. **React.js (Frontend)** *(Optional)*:  
-   - Provides a user-friendly interface to upload images and view predictions.
 
 1. **Node.js/Express (Backend Server)**:
   - Manages incoming HTTP requests from the frontend.
@@ -111,13 +99,33 @@ flowchart TD
 
 Follow these steps to set up the project locally.
 
+### **Setup Instructions for FoodVision**
+
 #### **1. Clone the Repository**
 ```bash
 git clone https://github.com/ArjunXvarma/foodvision.git
 cd foodvision
 ```
 
-#### **2. Setup Flask ML Server**
+---
+
+#### **2. Setup TensorFlow Serving Docker**
+1. Ensure Docker is installed and running on your system.  
+   If not, install Docker by following [Docker's installation guide](https://docs.docker.com/get-docker/).  
+
+2. Build the TensorFlow Serving Docker image:
+   ```bash
+   docker build -f Dockerfile.tf_serve -t food_pred_tf_serve .
+   ```
+
+3. Run the Docker container:
+   ```bash
+   docker run -p 8501:8501 --name food_pred_service food_pred_tf_serve
+   ```
+
+---
+
+#### **3. Setup Flask ML Server**
 1. Navigate to the Flask directory:
    ```bash
    cd model-server
@@ -126,12 +134,19 @@ cd foodvision
    ```bash
    pip install -r requirements.txt
    ```
-3. Run the Flask server:
+3. Update the Flask server configuration to point to the TensorFlow Serving REST API:
+   - Open `app.py` and ensure the endpoint for TensorFlow Serving is set to:
+     ```
+     http://localhost:8501/v1/models/food_pred:predict
+     ```
+4. Run the Flask server:
    ```bash
    python app.py
    ```
 
-#### **3. Setup Node.js API Server**
+---
+
+#### **4. Setup Node.js API Server**
 1. Navigate to the Node.js directory:
    ```bash
    cd ../api-server
@@ -145,7 +160,9 @@ cd foodvision
    node server.js
    ```
 
-#### **4. (Optional) Run React Frontend**
+---
+
+#### **5. (Optional) Run React Frontend**
 1. Navigate to the frontend directory:
    ```bash
    cd ../frontend
@@ -156,8 +173,23 @@ cd foodvision
    ```
 3. Run the frontend:
    ```bash
-    npm run build && npm run preview
+   npm run build && npm run preview
    ```
+
+---
+
+### **Quick Tips**
+- Use `docker ps` to ensure the TensorFlow Serving container is running.
+- If needed, stop the TensorFlow Serving container with:
+  ```bash
+  docker stop food_pred_service
+  ```
+- Restart it with:
+  ```bash
+  docker start food_pred_service
+  ```  
+
+This setup ensures the TensorFlow Serving, Flask ML server, Node.js API server, and React frontend are properly connected and functional.
 
 ---
 
@@ -172,6 +204,7 @@ cd foodvision
 ### **Future Improvements** 🚀
 - Add **user authentication** and **history tracking** for predictions.
 - Add **TensorFlow.js** support to allow in-browser model inference.
+- Using premium services like AWS/GCP for better **response times** 
 
 ---
 
