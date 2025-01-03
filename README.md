@@ -30,8 +30,8 @@ To showcase industry-standard architecture, the application adopts a **microserv
 
 ### **Project Architecture** 🛠️
 
-```mermaid
 description FoodVision Project Architecture
+```mermaid
 flowchart TD;
     User[Frontend User] -->|HTTP Request| Node[Node.js Backend];
     Node -->|Forwards Image & Request| Flask[Flask ML Server];
