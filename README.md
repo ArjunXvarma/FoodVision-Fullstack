@@ -37,7 +37,7 @@ flowchart TD;
     Node -->|Forwards Image & Request| Flask[Flask ML Server];
     Flask -->|Processes Image| TFServing[TF Serving Docker Container];
     TFServing -->|Returns Prediction| Flask;
-    F lask -->|Returns Prediction| Node;
+    Flask -->|Returns Prediction| Node;
     Node -->|Sends Response| User;
 ```
 
