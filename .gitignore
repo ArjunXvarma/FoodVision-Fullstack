@@ -1,6 +1,7 @@
 model-server/venv-metal
 model-server/app/__pycache__
 model-server/.env
+model-server/.venv
 
 api-server/node_modules
 api-server/.env
@@ -10,3 +11,5 @@ frontend/node_modules
 tests/.venv
 tests/__pycache__
 tests/.env
+
+.DS_Store

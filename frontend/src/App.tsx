@@ -34,6 +34,8 @@ const App: React.FC = () => {
     const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY
     const API_URL = import.meta.env.VITE_REACT_APP_API_URL
 
+    console.log(`Using ${API_URL} for prediction requests`)
+
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null
         if (file) {

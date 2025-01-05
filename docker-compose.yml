@@ -1,0 +1,55 @@
+name: foodvision-fullstack
+
+version: '3.8'
+
+services:
+  tf_serve:
+    build:
+      context: ./model-server/app/model
+      dockerfile: Dockerfile.tf_serve
+    restart: unless-stopped
+    ports:
+      - 8501:8501
+    volumes:
+      - ./model-server/app/model/serving_models:/models
+
+  model_server:
+    build: 
+      context: ./model-server
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+  
+  api_server:
+    build:
+      context: ./api-server
+    restart: unless-stopped
+
+    environment:
+    - NODE_ENV=development
+
+    command: npm run dev
+
+    volumes:
+      - ./api-server:/src
+      - /src/node_modules
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+
+    env_file: ./frontend/.env.development
+    volumes:
+      - ./frontend:/src
+      - /src/node_modules
+    networks:
+      - foodvision-fullstack
+
+networks:
+  foodvision-fullstack:
+    driver: bridge

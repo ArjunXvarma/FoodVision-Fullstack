@@ -199,6 +199,8 @@ This setup ensures the TensorFlow Serving, Flask ML server, Node.js API server, 
 |-------------------|------------|----------------------------------------|-------------------------
 | `/predict`        | POST       | Upload an image and get a prediction.  | `x-api-key`: include an api key
 
+> **Note:** Both the Node.js server and the Flask server have a `/predict` API that functions in the same way.
+
 ---
 
 ### **Future Improvements** 🚀
