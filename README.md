@@ -191,6 +191,7 @@ cd foodvision
    - The API server will be available at [http://localhost:3000](http://localhost:3000).  
    - The Flask server will be available at [http://localhost:5000](http://localhost:5000).  
    - If the frontend is enabled, it will run at [http://localhost:8080](http://localhost:8080).  
+   - If the tf serving server is enabled, it will run at [http://127.0.0.1:8501/v1/models/food_pred:predict](http://127.0.0.1:8501/v1/models/food_pred:predict).
 
 4. **Stop the services**:
    - Stop all containers with:
@@ -216,9 +217,14 @@ This setup ensures the TensorFlow Serving, Flask ML server, Node.js API server, 
 
 ### **API Endpoints** 🌐
 
-| **Endpoint**      | **Method** | **Description**                        | **Header**
-|-------------------|------------|----------------------------------------|-------------------------
-| `/predict`        | POST       | Upload an image and get a prediction.  | `x-api-key`: include an api key
+| **Endpoint**                              | **Method** | **Description**                                        | **Header**                      |
+|-------------------------------------------|------------|--------------------------------------------------------|----------------------------------|
+| `/predict`                                | POST       | Upload an image and get a prediction.                 | `x-api-key`: include an API key |
+| `{api-server}/health/api-server-health`               | GET        | Health check for the API server.                      | None                            |
+| `{model-server}/health`                                 | GET        | Health check for the model server.                    | None                            |
+| `{api-server}/health/frontend-health`                 | GET        | Health check for the frontend server.                 | None                            |
+| Root URL of `TF Model Serving Service`    | GET        | Health check or default endpoint for TF Serving.      | None                            |
+
 
 > **Note:** Both the Node.js server and the Flask server have a `/predict` API that functions in the same way.
 
@@ -235,15 +241,13 @@ This setup ensures the TensorFlow Serving, Flask ML server, Node.js API server, 
 
 In production environments, ensuring that servers remain active and responsive is crucial to avoid idle timeouts and guarantee quick responses to user requests. This is achieved by implementing a keep-alive cronjob. For this project, the cronjob is implemented using **GitHub Actions** to send periodic requests to the server endpoints. 
 
----
-
 ### **How the Keep-Alive Cronjob Works**
 
 The keep-alive script, written in **Node.js**, sends HTTP requests to health check endpoints for all essential services. This process prevents the servers from becoming idle due to inactivity.
 
----
-
 ### **How the Script Works**
+
+The script can be found in the cron jobs folder
 
 1. **Services Configuration**:  
    The `services` array contains the list of services with:
@@ -259,8 +263,6 @@ The keep-alive script, written in **Node.js**, sends HTTP requests to health che
 3. **Execution and Scheduling**:  
    - The script runs once during execution by the GitHub Actions workflow.
    - GitHub Actions schedules it periodically to keep the services alive.
-
----
 
 ### **Benefits of the Keep-Alive Cronjob**
 
@@ -285,8 +287,8 @@ Here are screenshots of the application showcasing the UI, API responses, and pr
 | **Screenshot**             | **Description**                             |  
 |----------------------------|---------------------------------------------|  
 | ![UI](docs/images/frontend/frontend.png)      | User-friendly React.js interface for image uploads. |  
-| ![API](docs/images/apis/api-server-api.png)      | JSON response showing the prediction results.       |  
-| ![Prediction](docs/images/apis/model-server-api.png) | Detailed prediction results for uploaded images.    |   
+| ![API](docs/images/apis/api-server-api.png)      | JSON response from the api server.       |  
+| ![Prediction](docs/images/apis/model-server-api.png) | JSON response from model server.    |   
 
 ---
 
