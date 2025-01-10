@@ -175,6 +175,7 @@ cd foodvision
    ```bash
    npm run build && npm run preview
    ```
+---
 
 ### **Quick Start with Docker Compose** 🐳
 
