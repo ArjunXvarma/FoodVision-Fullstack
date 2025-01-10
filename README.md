@@ -287,8 +287,11 @@ Here are screenshots of the application showcasing the UI, API responses, and pr
 | **Screenshot**             | **Description**                             |  
 |----------------------------|---------------------------------------------|  
 | ![UI](docs/images/frontend/frontend.png)      | User-friendly React.js interface for image uploads. |  
-| ![API](docs/images/apis/api-server-api.png)      | JSON response from the api server.       |  
-| ![Prediction](docs/images/apis/model-server-api.png) | JSON response from model server.    |   
+| ![API](docs/images/apis/api-server-api.png)      | JSON response from the API server.       |  
+| ![Prediction](docs/images/apis/model-server-api.png) | JSON response from the model server.    |  
+| ![API Health](docs/images/apis/api-server-health.png) | Health check response from the API server.          |  
+| ![Model Health](docs/images/apis/model-server-health.png) | Health check response from the model server.        |  
+| ![Frontend Health](docs/images/apis/frontend-health.png) | Health check response from the frontend server.     |  
 
 ---
 
