@@ -176,6 +176,27 @@ cd foodvision
    npm run build && npm run preview
    ```
 
+### **Quick Start with Docker Compose** 🐳
+
+1. **Ensure Docker and Docker Compose are installed**:
+   - Follow [Docker Installation Guide](https://docs.docker.com/get-docker/).
+
+2. **Start the services**:
+   - Build and run all services using Docker Compose:
+     ```bash
+     docker-compose up --build
+     ```
+
+3. **Access the application**:
+   - The API server will be available at [http://localhost:3000](http://localhost:3000).  
+   - The Flask server will be available at [http://localhost:5000](http://localhost:5000).  
+   - If the frontend is enabled, it will run at [http://localhost:8080](http://localhost:8080).  
+
+4. **Stop the services**:
+   - Stop all containers with:
+     ```bash
+     docker-compose down
+
 ---
 
 ### **Quick Tips**
@@ -210,9 +231,62 @@ This setup ensures the TensorFlow Serving, Flask ML server, Node.js API server, 
 
 ---
 
-### **Screenshots** 🟎️
+### **Keep-Alive Cronjob** ⏰
 
-> Upload screenshots of the app here showing the UI, API response, and predictions.
+In production environments, ensuring that servers remain active and responsive is crucial to avoid idle timeouts and guarantee quick responses to user requests. This is achieved by implementing a keep-alive cronjob. For this project, the cronjob is implemented using **GitHub Actions** to send periodic requests to the server endpoints. 
+
+---
+
+### **How the Keep-Alive Cronjob Works**
+
+The keep-alive script, written in **Node.js**, sends HTTP requests to health check endpoints for all essential services. This process prevents the servers from becoming idle due to inactivity.
+
+---
+
+### **How the Script Works**
+
+1. **Services Configuration**:  
+   The `services` array contains the list of services with:
+   - A **name** for identifying the service.
+   - A **URL** pointing to the health check endpoint.
+
+2. **Request Execution**:  
+   - The `keepAlive` function iterates over each service in the `services` array.
+   - It sends a `GET` request to the health check URL using **Axios**.
+   - If the request is successful, the script logs the service status (`200 - OK`).
+   - If an error occurs, the script logs the error message for debugging.
+
+3. **Execution and Scheduling**:  
+   - The script runs once during execution by the GitHub Actions workflow.
+   - GitHub Actions schedules it periodically to keep the services alive.
+
+---
+
+### **Benefits of the Keep-Alive Cronjob**
+
+1. **Prevents Idle Timeouts**:  
+   Ensures that servers remain active and do not shut down due to inactivity.  
+
+2. **Improves Responsiveness**:  
+   Servers respond quickly to user requests as they are already running.  
+
+3. **Automated Monitoring**:  
+   Logs any errors or downtime, making it easier to identify and resolve issues.  
+
+4. **Cost-Efficient**:  
+   Eliminates the need for manual intervention to keep the servers alive.
+
+---
+
+### **Screenshots** 🖼️  
+
+Here are screenshots of the application showcasing the UI, API responses, and predictions:  
+
+| **Screenshot**             | **Description**                             |  
+|----------------------------|---------------------------------------------|  
+| ![UI](docs/images/frontend/frontend.png)      | User-friendly React.js interface for image uploads. |  
+| ![API](docs/images/apis/api-server-api.png)      | JSON response showing the prediction results.       |  
+| ![Prediction](docs/images/apis/model-server-api.png) | Detailed prediction results for uploaded images.    |   
 
 ---
 
