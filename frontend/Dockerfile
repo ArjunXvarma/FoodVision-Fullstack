@@ -1,4 +1,4 @@
-FROM node:18-bookworm-slime
+FROM node:18-slim
 WORKDIR /src
 
 COPY package*.json ./

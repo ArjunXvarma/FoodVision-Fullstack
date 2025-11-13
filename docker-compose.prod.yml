@@ -1,0 +1,45 @@
+name: foodvision-fullstack
+
+services:
+  tf_serve:
+    image: foodvision.azurecr.io/foodvision-tf-serve:latest
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - MODEL_NAME=food_pred
+
+  model_server:
+    image: foodvision.azurecr.io/foodvision-model-server:latest
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    # Remove env_file — use Portal Application Settings instead
+    environment:
+      - FLASK_ENV=production
+    depends_on:
+      - tf_serve
+
+  api_server:
+    image: foodvision.azurecr.io/foodvision-api-server:latest
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - model_server
+
+  frontend:
+    image: foodvision.azurecr.io/foodvision-frontend:latest
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      - VITE_API_URL=http://api_server:3000
+    depends_on:
+      - api_server
+
+networks:
+  foodvision-fullstack:
+    driver: bridge
